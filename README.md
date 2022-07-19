@@ -1,13 +1,23 @@
 # Requirements
 
-Create a web application with 3 screens:
+Create a web application with 2 screens:
 
-* Home (simply links to the other 2)
+* Home (simply links to the Flag Quizz)
 * Flag Quizz
-* Round Table Plan
 
 
-## Flag Quizz
+## Getting started
+
+Make sure you have Docker installed and running, then:
+
+    git clone https://github.com/ideahq/docker-flags.git
+    cd docker-flags
+    docker compose up
+
+You then should be able to see the application at http://localhost:8000
+
+
+## Flag Quizz Task
 
 This is a small flag-guessing quizz.
 
@@ -27,7 +37,7 @@ The previous developer implemented this feature, but there are a couple of probl
 Please find and fix them.
 
 
-## Round Table Plan
+## Bonus Task - Round Table Plan
 
 This is a visualization of a round-table meeting between countries.
 
