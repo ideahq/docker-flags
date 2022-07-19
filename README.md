@@ -35,7 +35,7 @@ No anti-cheat mechanism is required.
 
 The previous developer implemented this feature, but there are a couple of problems.
 
-Please find and fix them.
+Please find and fix them. Also, feel free to add any additions you think would improve the app.
 
 
 ## Bonus Task - Round Table Plan
