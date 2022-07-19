@@ -1,9 +1,10 @@
 # Requirements
 
-Create a web application with 2 screens:
+Create a web application with 3 screens:
 
-* Home (simply links to the Flag Quizz)
+* Home (simply links to the other 2)
 * Flag Quizz
+* Round Table Pla
 
 
 ## Getting started
