@@ -9,14 +9,12 @@ class FlagQuizzController extends AbstractController {
 
     public function showQuestion (Request $request, Response $response) {
         $countryRepo = $this->getCountryRepository();
-        $country = $countryRepo->getRandomCountry();
 
-        $answers = [$country];
-        for ($i = 0; $i < self::ANSWER_COUNT - 1; $i++) {
-            $answers[] = $countryRepo->getRandomCountry();
-        }
-        shuffle($answers);
+        $answers = $countryRepo->getRandomCountries(self::ANSWER_COUNT); // Generate a list of unique Country options
+        $country = $answers[0];
 
+        usort($answers, [$countryRepo, "sortCountries"]); // Sort the countries by name
+        
         $data = [
             'country' => $country,
             'answers' => $answers,

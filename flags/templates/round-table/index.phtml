@@ -5,26 +5,29 @@ var flagWidth = 40
 var flagHeight = 20 // used for approximation
 var tableRadius = 100
 
-function getCountries () {
-    // FIXME i need to implement fetching countries by AJAX
-    // FIXME for now they are hardcoded
-
-    var countries = [
-        { flagUrl: "/flag-images/br.png", alpha2: "BR", name: "Brazil" },
-        { flagUrl: "/flag-images/cu.png", alpha2: "CU", name: "Cuba" },
-        { flagUrl: "/flag-images/ua.png", alpha2: "CG", name: "Ukraine" },
-        { flagUrl: "/flag-images/gr.png", alpha2: "GR", name: "Greece" }
-    ]
-    return countries
+function pullAndDisplayFlags () {
+    $.ajax({
+        type: "GET",
+        url: "round-table/countries.json" + "?random=" + $('#seatCount').val(),
+        dataType: "json"
+        }).done(function (res) {
+            displayFlags(res);
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            alert('Failed to pull countries')
+            console.log("AJAX call failed: " + textStatus + ", " + errorThrown);
+        });
 }
 
 function findOppositeCountry (index, allRecords) {
-    switch (index) {
-        case 0: return allRecords[2];
-        case 1: return allRecords[3];
-        case 2: return allRecords[0];
-        case 3: return allRecords[1];
+    // Find the corresponding index that is opposite to the given index. 
+    var pos
+    const middlePoint = allRecords.length / 2
+    if (index < middlePoint) {
+        pos = middlePoint + index
+    } else {
+        pos = index - middlePoint
     }
+    return allRecords[pos]
 }
 
 function placeFlag (countryRecord, index, allRecords) {
@@ -40,26 +43,18 @@ function placeFlag (countryRecord, index, allRecords) {
     var tableX = 200
     var tableY = 200
 
+    var points = allRecords.length
+    var denominator = points / 2
+
+    // Use this as r for the calculation below
     var distanceFromCenter = tableRadius + flagWidth + 5
 
-    switch (index) {
-        case 0:
-            x = distanceFromCenter
-            y = 0
-            break
-        case 1:
-            x = 0
-            y = -distanceFromCenter
-            break
-        case 2:
-            x = -distanceFromCenter
-            y = 0
-            break
-        case 3:
-            x = 0
-            y = distanceFromCenter
-            break
-    }
+    // To get points for a circle, (x, y) positions are calcualted as:
+    // x = r * cos(radians)
+    // y = r * sin(radians)
+    x = distanceFromCenter * Math.cos((index * Math.PI) / denominator)
+    y = distanceFromCenter * Math.sin((index * Math.PI) / denominator)       
+    
 
     var flagX = tableX + x - (flagWidth / 2)
     var flagY = tableY + y - (flagHeight / 2)
@@ -83,12 +78,25 @@ function placeFlag (countryRecord, index, allRecords) {
 function placeAllFlags () {
     // remove existing flags
     $('.flag-positioning').empty();
+    $('#error-box').html('')
 
-    var countryRecords = getCountries()
+
+    // Check that the input is a valid number and is even
     var seatCount = parseInt($('#seatCount').val())
-    var selectedCountries = countryRecords.slice(0, seatCount)
-    for (var i = 0; i < countryRecords.length; i++) {
-        var countryRecord = countryRecords[i]
+    if (!Number.isFinite(seatCount)) {
+        $('#error-box').append('Not a number')
+        return false;
+    } else if (seatCount != 0 && seatCount % 2 != 0) {
+        $('#error-box').append('Not an even number')
+        return false;
+    }
+
+    pullAndDisplayFlags()
+}
+
+function displayFlags (selectedCountries) {
+    for (var i = 0; i < selectedCountries.length; i++) {
+        var countryRecord = selectedCountries[i]
         placeFlag(countryRecord, i, selectedCountries)
     }
 }
@@ -98,6 +106,7 @@ function placeAllFlags () {
 <form>
     Seats: <input value="4" id="seatCount" />
     <button type="button" onclick="placeAllFlags()">place</button>
+    <div id='error-box' style='color: red; padding-left: 50px;'></div>
 </form>
 
 <div class="meeting-room">

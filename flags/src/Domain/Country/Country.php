@@ -26,4 +26,8 @@ class Country {
         $o->iso3166 = $row[4];
         return $o;
     }
+
+    public function formatJson () {
+        return ['name' => $this->name, 'flagUrl' => $this->getFlagUrl(), 'alpha2' => $this->alpha2];
+    }
 }
