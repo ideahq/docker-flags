@@ -44,7 +44,7 @@ function placeFlag (countryRecord, index, allRecords) {
     var tableY = 200
 
     var points = allRecords.length
-    var m = points / 2
+    var denominator = points / 2
 
     // Use this as r for the calculation below
     var distanceFromCenter = tableRadius + flagWidth + 5
@@ -52,8 +52,8 @@ function placeFlag (countryRecord, index, allRecords) {
     // To get points for a circle, (x, y) positions are calcualted as:
     // x = r * cos(radians)
     // y = r * sin(radians)
-    x = distanceFromCenter * Math.cos((index * Math.PI) / m)
-    y = distanceFromCenter * Math.sin((index * Math.PI) / m)       
+    x = distanceFromCenter * Math.cos((index * Math.PI) / denominator)
+    y = distanceFromCenter * Math.sin((index * Math.PI) / denominator)       
     
 
     var flagX = tableX + x - (flagWidth / 2)
