@@ -1,3 +1,13 @@
+<script>
+    function validate () {
+        $('#error-box').html('')
+        if ($('input[type=radio]:checked').length > 0) {
+            return true
+        }
+        $('#error-box').append('Please select one of the options above.')
+        return false;
+    }
+</script>
 <div>
     Here is the flag:
 </div>
@@ -8,7 +18,7 @@
         title="<?= $country->alpha2; ?>"
     />
 </div>
-<form method="POST">
+<form method="POST" onsubmit="return validate();">
     <input type="hidden" name="country" value="<?= $country->alpha2 ?>">
     <p>Pick the right country out of <b><?= count($answers) ?></b> variants:</p>
     <ul class="answer-list">
@@ -26,4 +36,5 @@
     ?>
     </ul>
     <input type="submit" />
+    <div id='error-box' style='color: red;'></div>
 </form>

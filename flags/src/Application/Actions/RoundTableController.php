@@ -10,7 +10,24 @@ class RoundTableController extends AbstractController {
     }
 
     public function getCountriesJson (Request $request, Response $response): Response {
-        $response->getBody()->write('[{"name", "Test Country"}]');
+        $queryParams = $request->getQueryParams();
+        $countryRepo = $this->getCountryRepository();
+        
+
+        // Can generate n random countries if query param 'random' is passed
+        if (isset($queryParams['random'])) {
+            $selectedCountries = $countryRepo->getRandomCountries($queryParams['random']);
+        } else {
+            $selectedCountries = $countryRepo->findAll();
+        }
+
+        $formattedCountries = [];
+
+        foreach ($selectedCountries as $country) {
+            $formattedCountries[] = $country->formatJson();
+        }
+
+        $response->getBody()->write(json_encode($formattedCountries));
         return $response->withHeader("Content-Type", "application/json");
     }
 }
